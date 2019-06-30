@@ -11,8 +11,6 @@ public class Lesson2
     static final Logger logger = LogManager.getLogger(Lesson2.class);
 
     static {
-        logger.debug("Назначаем директорию с драйвером");
-        System.setProperty("webdriver.chrome.driver","C:\\chromedriver.exe");
         logger.debug("Инициализируем драйвер");
         WebDriverManager.chromedriver().setup();
     }

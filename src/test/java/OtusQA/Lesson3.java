@@ -1,41 +1,57 @@
 package OtusQA;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.JavascriptExecutor;
 
-public class Lesson3
+public class Lesson3 extends BaseTest
 {
-    static final Logger logger = LogManager.getLogger(Lesson3.class);
-    static {
-        System.setProperty("webdriver.chrome.driver","C:\\chromedriver.exe");
+    //private static final Logger logger = LogManager.getLogger(Lesson3.class);
+    /*static {
         WebDriverManager.chromedriver().setup();
+        logger.debug("Инициализируем драйвер");
+    }*/
+
+    //private WebDriver driver = new ChromeDriver();
+
+    /*public WebDriver GetDriver(){
+        //WebDriverManager.chromedriver().setup();
+        return driver;
+    }*/
+
+    @Test
+    public void test(){
+        HomepageOpening();
+        Login("tester","tester");
+        SelectTestsEditTree();
+        String tsname = CreateTestSuite("This is a new TestSuite #"+ now(),"Autotest suite");
+        SelectTestSuite(tsname);
+        String tcname = CreateTestCase("Testcase #1 #"+now(),
+                "Описание теста: цель, сценарий и исходное состояние программы",
+                "Условия");
+        SelectTestCase(tsname,tcname);
+        SelectStepAdding();
+        AddTestStep("TC 1 Step 1","Step 1 in TC 1 was added");
+        AddTestStep("TC 1 Step 2","Step 2 in TC 1 was added");
+        AddTestStep("TC 1 Step 3","Step 3 in TC 1 was added");
+        SelectTestSuite(tsname);
+        tcname = CreateTestCase("Testcase #2 #"+now(),
+                "Описание теста: цель, сценарий и исходное состояние программы",
+                "Условия");
+        SelectTestCase(tsname,tcname);
+        SelectStepAdding();
+        AddTestStep("TC 2 Step 1","Step 1 in TC 2 was added");
+        AddTestStep("TC 2 Step 2","Step 2 in TC 2 was added");
+        AddTestStep("TC 2 Step 3","Step 3 in TC 2 was added");
     }
 
-    protected WebDriver driver = new ChromeDriver();
-
-    public void HomepageOpening(){
-        driver.manage().window().maximize();
-        driver.get("http://localhost/");
-    }
-    public void Login(String login,String password){
-        driver.findElement(By.cssSelector("input[id=tl_login]"))
-                .sendKeys(login);
-        driver.findElement(By.cssSelector("input[id=tl_password]"))
-                .sendKeys(password);
-        driver.findElement(By.xpath("//input[@type='submit']"))
-                .submit();
-    }
     public void SelectTestsEditTree(){
+        logger.info("Разворачиваем дерево");
         driver.switchTo()
                 .frame(1)
                 .findElement(By.xpath("//a[@class='list-group-item' and contains(@href,'?feature=editTc')]"))

@@ -1,12 +1,14 @@
 package OtusQA;
 
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 
 public class LocatorsTest {
     @Test
     public void StartTest(){
-        Lesson3 test = new Lesson3();
 
+        //Lesson3 test = new Lesson3();
+        /*
         test.HomepageOpening();
         test.Login("tester","tester");
         test.SelectTestsEditTree();
@@ -29,5 +31,6 @@ public class LocatorsTest {
         test.AddTestStep("TC 2 Step 1","Step 1 in TC 2 was added");
         test.AddTestStep("TC 2 Step 2","Step 2 in TC 2 was added");
         test.AddTestStep("TC 2 Step 3","Step 3 in TC 2 was added");
+         */
     }
 }
