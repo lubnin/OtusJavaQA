@@ -83,28 +83,13 @@ public abstract class BaseTest {
     public void SelectRandomTest(){
         driver  .switchTo().frame("mainframe")
                 .switchTo().frame("treeframe");
-        List list = driver.findElements(By.xpath("//b[contains(text(),'TP-')]"));
-        if(list.size()>0){
-            for (int i=0;i<list.size();i++){
-                WebElement el = driver.findElements(By.xpath("//b[contains(text(),'TP-')]")).get(i);
-                if (el!=null){
-                    WebElement testcase = el.findElement(By.xpath(".."));
-                    try {
-                        Actions action = new Actions(driver);
-                        action.doubleClick(testcase.findElement(By.xpath("//span[@class='light_not_run']"))).perform();
-                        logger.info("Выбран не запущенный тесткейс");
-                        return;
-                    } catch (InvalidSelectorException e){
-                        logger.error("Ошибка в выражении селектора");
-                        continue;
-                    } catch (NoSuchElementException e){
-                        logger.info("Попавшийся тест находится в статусе "+testcase.getCssValue("title"));
-                        continue;
-                    }
-                }
-            }
+    //
+        if (driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']")).size()>0){
+            driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']")).get(0).click();
+            //el.findElement(By.xpath("//b[contains(text(),'TP-')]//..//..//..//..//..//div")).click();
         }else{
-            logger.error("Тесты в списке не найдены");
+            List list = driver.findElements(By.xpath("//b[contains(text(),'TP-')]"));
+            logger.error("Все "+list.size()+" тестов уже были запущены");
             return;
         }
         driver.findElements(By.xpath("//b[contains(text(),'TP-')]"));
