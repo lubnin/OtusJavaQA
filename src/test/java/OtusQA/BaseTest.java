@@ -100,5 +100,26 @@ public abstract class BaseTest {
         String actual = driver  .findElement(By.cssSelector("div.not_run"))
                                 .getCssValue("background");
         assertEquals(expected,actual);
+        driver  .switchTo().parentFrame()
+                .switchTo().parentFrame();
+    }
+    public int getStepsCount(){
+        driver  .switchTo().frame("mainframe")
+                .switchTo().frame("workframe");
+        int qty =  driver.findElements(By.xpath("//tr[contains(@id,'step_row_')]")).size();
+        driver  .switchTo().parentFrame()
+                .switchTo().parentFrame();
+        return qty;
+    }
+    public void setStepStatus(int stepindex,String status){
+        driver  .switchTo().frame("mainframe")
+                .switchTo().frame("workframe");
+        driver.findElement(By.xpath("//tr[contains(@id,'step_row_"+stepindex+"')]"))
+                .findElement(By.cssSelector("select[class=step_status]")).click();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        driver.findElement(By.xpath("//tr[contains(@id,'step_row_"+stepindex+"')]"))
+                .findElement(By.cssSelector("option[value="+status+"]")).click();
+        driver  .switchTo().parentFrame()
+                .switchTo().parentFrame();
     }
 }

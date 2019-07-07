@@ -4,9 +4,9 @@ selectTest()
 2. Выбрать любой тест, кликнуть на него
 selectRandomTest()
 3. Проверить что в заголовке теста цвет черный
-checkTestHeader()
 4. Проставить "Пройден" во всех шагах
-setStatus(Step,Status)
+getStepsCount();
+setStatus(StepIndex,Status)
 5. Нажать на "passed"
 setTestPassed
 6. Проверить что цвет в заголовке теста поменялся на зеленый
@@ -24,6 +24,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 public class Lesson4_1 extends BaseTest
 {
     static final Logger logger = LogManager.getLogger(Lesson4_1.class);
@@ -35,8 +37,17 @@ public class Lesson4_1 extends BaseTest
         runTestsOpening();
         LetsRunTest();
         ExpandTreeView();
-        SelectRandomTest();
+        int steps;
+        do {
+            SelectRandomTest();
+            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+            steps = getStepsCount();
+        } while (steps==0);
         CheckTestCaseColor("rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box");
+        for(int i=1 ; i<=steps ; i++){
+            setStepStatus(i,"p");
+        }
+
         //quit();
     }
 
