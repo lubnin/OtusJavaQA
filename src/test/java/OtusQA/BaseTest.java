@@ -7,15 +7,12 @@ package OtusQA;
     import org.junit.Before;
     import org.junit.BeforeClass;
     import org.openqa.selenium.By;
-    import org.openqa.selenium.InvalidSelectorException;
     import org.openqa.selenium.WebDriver;
-    import org.openqa.selenium.WebElement;
     import org.openqa.selenium.chrome.ChromeDriver;
-    import org.openqa.selenium.interactions.Actions;
-
     import java.util.List;
-    import java.util.NoSuchElementException;
+    import java.util.Random;
     import java.util.concurrent.TimeUnit;
+    import static org.junit.Assert.assertEquals;
 
 public abstract class BaseTest {
     static final Logger logger = LogManager.getLogger(Lesson4_1.class);
@@ -83,17 +80,25 @@ public abstract class BaseTest {
     public void SelectRandomTest(){
         driver  .switchTo().frame("mainframe")
                 .switchTo().frame("treeframe");
-    //
-        if (driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']")).size()>0){
-            driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']")).get(0).click();
-            //el.findElement(By.xpath("//b[contains(text(),'TP-')]//..//..//..//..//..//div")).click();
+        List notRunnedTests = driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']"));
+        if (notRunnedTests.size()>0){
+            Random randomGenerator = new Random();
+            int randomInt = randomGenerator.nextInt(notRunnedTests.size());
+            logger.info("Выбираем из списка любой не пройденный тест");
+            driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']")).get(randomInt).click();
         }else{
             List list = driver.findElements(By.xpath("//b[contains(text(),'TP-')]"));
             logger.error("Все "+list.size()+" тестов уже были запущены");
-            return;
         }
-        driver.findElements(By.xpath("//b[contains(text(),'TP-')]"));
-
-                //.findElements(By.xpath("//span[@class='light_not_run' and @title='Не запускался' and contains(text(),\"TP-\")]"));
+        driver  .switchTo().parentFrame()
+                .switchTo().parentFrame();
+    }
+    public void CheckTestCaseColor(String expected){
+        driver  .switchTo().frame("mainframe")
+                .switchTo().frame("workframe");
+        String actual = driver  .findElement(By.cssSelector("div.not_run"))
+                                .getCssValue("background");
+        assertEquals(expected,actual);
     }
 }

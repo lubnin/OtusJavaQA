@@ -16,7 +16,6 @@ getTreeColor
 8. "Провалить" тест
 setStatus
 9, 10 Проверить что цвет стал красным
-
  */
 
 package OtusQA;
@@ -37,7 +36,7 @@ public class Lesson4_1 extends BaseTest
         LetsRunTest();
         ExpandTreeView();
         SelectRandomTest();
-
+        CheckTestCaseColor("rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box");
         //quit();
     }
 
