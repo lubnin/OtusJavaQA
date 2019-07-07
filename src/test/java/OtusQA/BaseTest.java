@@ -122,4 +122,32 @@ public abstract class BaseTest {
         driver  .switchTo().parentFrame()
                 .switchTo().parentFrame();
     }
+    public void setTestCasePassed(){
+        driver  .switchTo().frame("mainframe")
+                .switchTo().frame("workframe");
+        driver.findElement(By.xpath("//*[@id=\"fastExecp_106\" and @title=\"Click to set to passed\"]")).click();
+        driver  .switchTo().parentFrame()
+                .switchTo().parentFrame();
+    }
+    public void setTestCaseFailed(){
+        driver  .switchTo().frame("mainframe")
+                .switchTo().frame("workframe");
+        //driver.findElement(By.xpath("//*[@id=\"fastExecp_106\" and @title=\"Click to set to failed\"]")).click();
+        driver  .switchTo().parentFrame()
+                .switchTo().parentFrame();
+    }
+    public void SelectTestCase(String tcname) {
+        if (driver.switchTo().frame("mainframe")
+                .switchTo().frame("treeframe")
+                .findElements(By.xpath("//span[contains(text(),'" + tcname + "')]"))
+                .size() != 0) {
+            driver.findElement(By.xpath("//span[contains(text(),'" + tcname + "')]"))
+                    .click();
+        }
+        driver  .switchTo().parentFrame()
+                .switchTo().parentFrame();
+    }
+    public void GetTreeColor(){
+
+    }
 }
