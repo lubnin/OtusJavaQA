@@ -23,6 +23,7 @@ package OtusQA;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,25 +35,30 @@ public class Lesson4_1 extends BaseTest
     public void test(){
         HomepageOpening();
         Login("tester","tester");
-        runTestsOpening();
+        //runTestsOpening();
         LetsRunTest();
         ExpandTreeView();
         int steps;
+        String selectedcase;
         do {
-            //SelectRandomTest();
-            /*******************************/
-            SelectTestCase(":Testcase #1 #16-06-2019 23:14:02");
+            selectedcase = SelectRandomTest();
+            /*********debug****************/
+            //SelectTestCase(":Testcase #1 #16-06-2019 23:14:02");
             /*******************************/
             driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
             steps = getStepsCount();
         } while (steps==0);
-        //CheckTestCaseColor("rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box");
+        CheckTestCaseColor("div.not_run");
         for(int i=1 ; i<=steps ; i++){
             setStepStatus(i,"p");
         }
-        //setTestCasePassed();
+        setTestCasePassed();
+        CheckTestCaseColor("div.passed");
+        assertEquals("rgb(213, 238, 213) none repeat scroll 0% 0% / auto padding-box border-box",
+                    GetCaseColorFromTree(selectedcase));
         setTestCaseFailed();
-        //quit();
+        CheckTestCaseColor("div.failed");
+        quit();
     }
 
     public void quit()
@@ -60,9 +66,5 @@ public class Lesson4_1 extends BaseTest
         logger.info("Закрываем браузер");
         driver.quit();
     }
-    public void runTestsOpening(){
-
-    }
-
 }
 

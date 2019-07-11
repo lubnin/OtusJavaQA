@@ -8,7 +8,11 @@ package OtusQA;
     import org.junit.BeforeClass;
     import org.openqa.selenium.By;
     import org.openqa.selenium.WebDriver;
+    import org.openqa.selenium.WebElement;
     import org.openqa.selenium.chrome.ChromeDriver;
+    import org.openqa.selenium.interactions.Actions;
+
+    import java.awt.event.WindowEvent;
     import java.util.List;
     import java.util.Random;
     import java.util.concurrent.TimeUnit;
@@ -77,7 +81,8 @@ public abstract class BaseTest {
         driver  .switchTo().parentFrame()
                 .switchTo().parentFrame();
     }
-    public void SelectRandomTest(){
+    public String SelectRandomTest(){
+        String tcname = "";
         driver  .switchTo().frame("mainframe")
                 .switchTo().frame("treeframe");
         List notRunnedTests = driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']"));
@@ -86,18 +91,37 @@ public abstract class BaseTest {
             int randomInt = randomGenerator.nextInt(notRunnedTests.size());
             logger.info("Выбираем из списка любой не пройденный тест");
             driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-            driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']")).get(randomInt).click();
+            WebElement randomcase = driver.findElements(By.xpath("//b[contains(text(),'TP-')]//..//..//span[@class='light_not_run']")).get(randomInt);
+            tcname = randomcase.getText();
+            randomcase.click();
+            logger.info("Выбран тест "+tcname);
         }else{
             List list = driver.findElements(By.xpath("//b[contains(text(),'TP-')]"));
             logger.error("Все "+list.size()+" тестов уже были запущены");
         }
         driver  .switchTo().parentFrame()
                 .switchTo().parentFrame();
+        return tcname;
     }
-    public void CheckTestCaseColor(String expected){
+    public void CheckTestCaseColor(String selector){
         driver  .switchTo().frame("mainframe")
                 .switchTo().frame("workframe");
-        String actual = driver  .findElement(By.cssSelector("div.not_run"))
+        String expected;
+        if ("div.not_run".equals(selector)) {
+            logger.debug("Цвет должен быть чёрным");
+            expected = "rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box";
+        } else if ("div.failed".equals(selector)) {
+            logger.debug("Цвет должен быть красным");
+            expected = "rgb(178, 34, 34) none repeat scroll 0% 0% / auto padding-box border-box";
+        } else if ("div.passed".equals(selector)) {
+            logger.debug("Цвет должен быть зелёным");
+            expected = "rgb(0, 100, 0) none repeat scroll 0% 0% / auto padding-box border-box";
+        } else {
+            logger.error("Не найден заголовок для проверки цвета");
+            return;
+        }
+        SetHeaderVisible();
+        String actual = driver  .findElement(By.cssSelector(selector))
                                 .getCssValue("background");
         assertEquals(expected,actual);
         driver  .switchTo().parentFrame()
@@ -114,8 +138,11 @@ public abstract class BaseTest {
     public void setStepStatus(int stepindex,String status){
         driver  .switchTo().frame("mainframe")
                 .switchTo().frame("workframe");
-        driver.findElement(By.xpath("//tr[contains(@id,'step_row_"+stepindex+"')]"))
-                .findElement(By.cssSelector("select[class=step_status]")).click();
+        WebElement steplist = driver.findElement(By.xpath("//tr[contains(@id,'step_row_"+stepindex+"')]"))
+                .findElement(By.cssSelector("select[class=step_status]"));
+        Actions action = new Actions(driver);
+        action.moveToElement(steplist);
+        steplist.click();
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         driver.findElement(By.xpath("//tr[contains(@id,'step_row_"+stepindex+"')]"))
                 .findElement(By.cssSelector("option[value="+status+"]")).click();
@@ -125,17 +152,24 @@ public abstract class BaseTest {
     public void setTestCasePassed(){
         driver  .switchTo().frame("mainframe")
                 .switchTo().frame("workframe");
-        driver.findElement(By.xpath("//*[@id=\"fastExecp_106\" and @title=\"Click to set to passed\"]")).click();
+        WebElement btn = driver.findElement(By.xpath("//*[contains(@id,\"fastExecp_\")]"));
+        Actions action = new Actions(driver);
+        action.moveToElement(btn);
+        btn.click();
         driver  .switchTo().parentFrame()
                 .switchTo().parentFrame();
     }
     public void setTestCaseFailed(){
         driver  .switchTo().frame("mainframe")
                 .switchTo().frame("workframe");
-        //driver.findElement(By.xpath("//*[@id=\"fastExecp_106\" and @title=\"Click to set to failed\"]")).click();
+        WebElement btn =driver.findElement(By.xpath("//*[contains(@id,\"fastExecf_\")]"));
+        Actions action = new Actions(driver);
+        action.moveToElement(btn);
+        btn.click();
         driver  .switchTo().parentFrame()
                 .switchTo().parentFrame();
     }
+    /* debug
     public void SelectTestCase(String tcname) {
         if (driver.switchTo().frame("mainframe")
                 .switchTo().frame("treeframe")
@@ -147,7 +181,31 @@ public abstract class BaseTest {
         driver  .switchTo().parentFrame()
                 .switchTo().parentFrame();
     }
-    public void GetTreeColor(){
-
+    */
+    public void SetHeaderVisible(){
+        //driver.switchTo().frame("mainframe")
+        //        .switchTo().frame("workframe");
+        WebElement btn = driver.findElement(By.cssSelector("input[id=toggle_history_on_off]"));
+        Actions action = new Actions(driver);
+        action.moveToElement(btn);
+        if (driver.findElements(By.cssSelector("input[id=toggle_history_on_off][name=btn_history_off]")).size()==1) {
+            driver.findElement(By.cssSelector("input[id=toggle_history_on_off][name=btn_history_off]")).click();
+            logger.info("Свернём историю прогонов для отображения заголовка");
+        } else if (driver.findElements(By.cssSelector("input[id=toggle_history_on_off][name=btn_history_on]")).size()==1) {
+            logger.info("Заголовок тесткейса уже должен быть виден");
+        }
+    }
+    public String GetCaseColorFromTree(String testcase){
+        driver  .switchTo().frame("mainframe")
+                .switchTo().frame("treeframe");
+        String color = driver.findElement(By.xpath("//span[contains('\" + testcase + \"',text())]")).getCssValue("background");
+        driver  .switchTo().parentFrame()
+                .switchTo().parentFrame();
+        if (color!=null){
+            return color;
+        } else {
+            logger.error("Не удалось определить цвет теста "+testcase+" в дереве");
+            return "-1";
+        }
     }
 }
