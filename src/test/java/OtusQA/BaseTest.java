@@ -11,8 +11,6 @@ package OtusQA;
     import org.openqa.selenium.WebElement;
     import org.openqa.selenium.chrome.ChromeDriver;
     import org.openqa.selenium.interactions.Actions;
-
-    import java.awt.event.WindowEvent;
     import java.util.List;
     import java.util.Random;
     import java.util.concurrent.TimeUnit;
@@ -35,9 +33,6 @@ public abstract class BaseTest {
 
     @After
     public void tearDown() {
-        /*if (driver != null) {
-            driver.quit();
-        }*/
     }
 
     public void HomepageOpening(){
@@ -169,22 +164,7 @@ public abstract class BaseTest {
         driver  .switchTo().parentFrame()
                 .switchTo().parentFrame();
     }
-    /* debug
-    public void SelectTestCase(String tcname) {
-        if (driver.switchTo().frame("mainframe")
-                .switchTo().frame("treeframe")
-                .findElements(By.xpath("//span[contains(text(),'" + tcname + "')]"))
-                .size() != 0) {
-            driver.findElement(By.xpath("//span[contains(text(),'" + tcname + "')]"))
-                    .click();
-        }
-        driver  .switchTo().parentFrame()
-                .switchTo().parentFrame();
-    }
-    */
     public void SetHeaderVisible(){
-        //driver.switchTo().frame("mainframe")
-        //        .switchTo().frame("workframe");
         WebElement btn = driver.findElement(By.cssSelector("input[id=toggle_history_on_off]"));
         Actions action = new Actions(driver);
         action.moveToElement(btn);
@@ -198,7 +178,7 @@ public abstract class BaseTest {
     public String GetCaseColorFromTree(String testcase){
         driver  .switchTo().frame("mainframe")
                 .switchTo().frame("treeframe");
-        String color = driver.findElement(By.xpath("//span[contains('\" + testcase + \"',text())]")).getCssValue("background");
+        String color = driver.findElement(By.xpath("//span['"+testcase+"' = substring(., string-length(.) - string-length('"+testcase+"') +1) and @class]")).getCssValue("background");
         driver  .switchTo().parentFrame()
                 .switchTo().parentFrame();
         if (color!=null){
