@@ -48,11 +48,5 @@ public class Lesson4_1 extends BaseTest
         CheckTestCaseColor("div.failed");
         quit();
     }
-
-    public void quit()
-    {
-        logger.info("Закрываем браузер");
-        driver.quit();
-    }
 }
 

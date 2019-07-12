@@ -188,4 +188,9 @@ public abstract class BaseTest {
             return "-1";
         }
     }
+    public void quit()
+    {
+        logger.info("Закрываем браузер");
+        driver.quit();
+    }
 }
