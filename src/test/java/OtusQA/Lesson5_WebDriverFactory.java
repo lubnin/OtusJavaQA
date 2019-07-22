@@ -13,19 +13,23 @@ public class Lesson5_WebDriverFactory {
 
     @Test
     public void test(){
-        browserTest(1,"Chrome","cHrOmE");
-        browserTest(2,"Firefox","fIrEFOX");
-        browserTest(3,"Internet Explorer","Ie");
-        //browserTest(4,"Edge","EDGE");
-        //browserTest(5,"Opera","opera");
-
+        browserTest(1,"Chrome",browser.CHROME);
+        browserTest(2,"Firefox",browser.FIREFOX);
+        browserTest(3,"Internet Explorer",browser.IE);
+        browserTest(4,"Edge",browser.EDGE);
+        browserTest(5,"Opera",browser.OPERA);
     }
-    public void browserTest(int testindex,String browsername,String testbrowsername){
+    public void browserTest(int testindex,String browsername,browser br){
         logger.debug(testindex+". Откроем Яндекс в "+browsername);
-        WebDriver wd = WebDriverFactory.createNewDriver(testbrowsername);
+        WebDriver wd = WebDriverFactory.createNewDriver(br);
         wd.get("https://ya.ru");
         wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         assertEquals(browsername+" успешно инициализировался","Яндекс",wd.getTitle());
-        wd.quit();
+        if (br==browser.IE){
+            wd.close();
+        }
+        if (wd!=null){
+            wd.quit();
+        }
     }
 }

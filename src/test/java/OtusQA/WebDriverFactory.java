@@ -17,19 +17,11 @@ import org.openqa.selenium.opera.OperaOptions;
 
 public class WebDriverFactory {
 
-    private enum browser {
-        CHROME,
-        FIREFOX,
-        OPERA,
-        EDGE,
-        IE
-    }
-
     static final Logger logger = LogManager.getLogger(WebDriverFactory.class);
 
-    public static org.openqa.selenium.WebDriver createNewDriver(String browserString){
+    public static org.openqa.selenium.WebDriver createNewDriver(browser browser, Options externalOptions){
         WebDriver driver;
-        switch (browser.valueOf(browserString.toUpperCase())){
+        switch (browser){
             case CHROME:
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
@@ -46,17 +38,11 @@ public class WebDriverFactory {
                 driver = new FirefoxDriver(firefoxOptions);
                 logger.info("Инициализирован драйвер браузера Firefox");
                 break;
-            /*case OPERA:
+            case OPERA:
                 WebDriverManager.operadriver().setup();
                 OperaOptions options = new OperaOptions();
-                options.setBinary("C:\\Users\\Иван\\AppData\\Local\\Programs\\Opera\\launcher.exe");
-                        //addArguments("BinaryLocation":"C://Program Files/Opera/launcher.exe");
-                        //.BinaryLocation = @"C://Program Files/Opera/launcher.exe"; //path to my Opera browser usingAnyFreePort
-                options.setExperimentalOption("useAutomationExtension", false);
+                options.setBinary("C:\\Program Files\\Opera\\60.0.3255.27\\opera.exe");
                 options.addArguments("usingAnyFreePort");
-                options.addArguments("--disable-dev-shm-usage");
-                options.addArguments("--no-sandbox");
-                options.addArguments("--headless");
                 driver = new OperaDriver(options);
                 logger.info("Инициализирован драйвер браузера Opera");
                 break;
@@ -64,7 +50,7 @@ public class WebDriverFactory {
                 WebDriverManager.edgedriver().setup();
                 driver = new EdgeDriver();
                 logger.info("Инициализирован драйвер браузера Edge (Зачем???))");
-                break;*/
+                break;
             case IE:
                 WebDriverManager.iedriver().setup();
                 InternetExplorerOptions internetExplorerOptionsOptions = new InternetExplorerOptions();
@@ -73,7 +59,7 @@ public class WebDriverFactory {
                 driver.manage().window().maximize();
                 logger.info("Не делай так больше, браузер IE запущен");
                 break;
-            default: logger.error("Не удалось определить браузер по наименованию Name: "+browserString);
+            default: logger.error("Не удалось определить браузер по наименованию Name: "+ browser.toString());
                 driver = null;
         }
         return driver;
