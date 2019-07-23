@@ -19,7 +19,7 @@ public class WebDriverFactory {
 
     static final Logger logger = LogManager.getLogger(WebDriverFactory.class);
 
-    public static org.openqa.selenium.WebDriver createNewDriver(browser browser, Options externalOptions){
+    public static org.openqa.selenium.WebDriver createNewDriver(browser browser/*, Options externalOptions*/){
         WebDriver driver;
         switch (browser){
             case CHROME:
