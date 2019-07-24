@@ -1,6 +1,6 @@
 package OtusQA;
 
-public enum browser {
+public enum Browser {
     CHROME,
     FIREFOX,
     OPERA,

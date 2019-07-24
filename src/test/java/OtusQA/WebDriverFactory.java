@@ -3,11 +3,12 @@ package OtusQA;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -19,15 +20,28 @@ public class WebDriverFactory {
 
     static final Logger logger = LogManager.getLogger(WebDriverFactory.class);
 
-    public static org.openqa.selenium.WebDriver createNewDriver(browser browser/*, Options externalOptions*/){
+    public static WebDriver createNewDriver(Browser browser){
+        WebDriver driver = createNewDriver(browser,new MutableCapabilities());
+        return driver;
+    }
+
+    public static WebDriver createNewDriver(Browser browser,  MutableCapabilities options){
+        //String driverClassName;
         WebDriver driver;
+        MutableCapabilities externalOptions = new MutableCapabilities();
+        if (options.asMap().size()!=0){
+            externalOptions = options;
+            logger.info("При инициализации обнаружены дополнительные настройки");
+        }
         switch (browser){
             case CHROME:
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
                 chromeOptions.addArguments("--start-maximized");
                 //добавить необходимые опции
+                chromeOptions.merge(externalOptions);
                 driver = new ChromeDriver(chromeOptions);
+                //driverClassName = "org.openqa.selenium.chrome.ChromeDriver";
                 logger.info("Инициализирован драйвер браузера Chrome");
                 break;
             case FIREFOX:
@@ -35,33 +49,47 @@ public class WebDriverFactory {
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
                 firefoxOptions.addArguments("--start-maximized");
                 //добавить необходимые опции
+                firefoxOptions.merge(externalOptions);
                 driver = new FirefoxDriver(firefoxOptions);
                 logger.info("Инициализирован драйвер браузера Firefox");
                 break;
             case OPERA:
                 WebDriverManager.operadriver().setup();
-                OperaOptions options = new OperaOptions();
-                options.setBinary("C:\\Program Files\\Opera\\60.0.3255.27\\opera.exe");
-                options.addArguments("usingAnyFreePort");
-                driver = new OperaDriver(options);
+                OperaOptions operaOptions = new OperaOptions();
+                operaOptions.setBinary("C:\\Program Files\\Opera\\60.0.3255.27\\opera.exe");
+                operaOptions.addArguments("usingAnyFreePort");
+                operaOptions.merge(externalOptions);
+                driver = new OperaDriver(operaOptions);
                 logger.info("Инициализирован драйвер браузера Opera");
                 break;
             case EDGE:
                 WebDriverManager.edgedriver().setup();
-                driver = new EdgeDriver();
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.merge(externalOptions);
+                driver = new EdgeDriver(edgeOptions);
                 logger.info("Инициализирован драйвер браузера Edge (Зачем???))");
                 break;
             case IE:
                 WebDriverManager.iedriver().setup();
-                InternetExplorerOptions internetExplorerOptionsOptions = new InternetExplorerOptions();
+                InternetExplorerOptions internetExplorerOptions = new InternetExplorerOptions();
                 //добавить необходимые опции
-                driver = new InternetExplorerDriver();
+                internetExplorerOptions.merge(externalOptions);
+                driver = new InternetExplorerDriver(internetExplorerOptions);
                 driver.manage().window().maximize();
                 logger.info("Не делай так больше, браузер IE запущен");
                 break;
             default: logger.error("Не удалось определить браузер по наименованию Name: "+ browser.toString());
+                //driverClassName = null;
                 driver = null;
         }
+        /*driverClassName = "org.openqa.selenium.chrome.ChromeDriver";
+        WebDriver driver = driverInitialize(driverClassName); */
         return driver;
     }
+
+    /*public static WebDriver driverInitialize(String classFullName) throws ClassNotFoundException{
+        Class browserClass = Class.forName(classFullName);
+        WebDriver dr = (WebDriver) browserClass.newInstance();
+        return dr;
+    }*/
 }
