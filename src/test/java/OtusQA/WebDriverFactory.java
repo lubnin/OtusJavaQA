@@ -3,6 +3,7 @@ package OtusQA;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,6 +16,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class WebDriverFactory {
 
@@ -92,4 +94,20 @@ public class WebDriverFactory {
         WebDriver dr = (WebDriver) browserClass.newInstance();
         return dr;
     }*/
+    public static void closeBrowser(WebDriver driver){
+        Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
+        String browserName = cap.getBrowserName().toUpperCase();
+        try{
+            Browser browser = Browser.valueOf(browserName);
+            logger.info("Закрываю браузер "+browser.toString());
+            if (browser == Browser.IE) {
+                driver.close();
+            } else {
+                driver.quit();
+            }
+        }catch (IllegalArgumentException e){
+            logger.error("Не удалось определить браузер"+ browserName);
+            e.printStackTrace();
+        }
+    }
 }
