@@ -1,5 +1,6 @@
-package OtusQA;
+package com.otus.selenium;
 
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -9,7 +10,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.JavascriptExecutor;
 
-public class Lesson3 extends BaseTest
+public class Lesson3Test extends BaseTest
 {
     //private static final Logger logger = LogManager.getLogger(Lesson3.class);
     /*static {
@@ -23,7 +24,7 @@ public class Lesson3 extends BaseTest
         //WebDriverManager.chromedriver().setup();
         return driver;
     }*/
-
+    @DisplayName("Создание тестсьютов с тест-кейсами в TMS")
     @Test
     public void test(){
         HomepageOpening();

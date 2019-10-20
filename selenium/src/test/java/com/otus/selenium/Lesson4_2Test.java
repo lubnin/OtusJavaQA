@@ -8,8 +8,10 @@ Create button
 Проверить, что в таблице ваш проект с настройками (имя, описание, public)
  */
 
-package OtusQA;
+package com.otus.selenium;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.junit4.DisplayName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -22,19 +24,22 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class Lesson4_2 extends BaseTest
+public class Lesson4_2Test extends BaseTest
 {
-    static final Logger logger = LogManager.getLogger(Lesson4_1.class);
+    static final Logger logger = LogManager.getLogger(Lesson4_1Test.class);
 
+    @DisplayName("Тест создания проекта в TMS TestLink")
     @Test
     public void test(){
+        Allure.step("Открываем TestLink и авторизуемся");
         HomepageOpening();
         Login("admin","verysecretadminpassword");
         CreateAndCheckProject();
-        //quit();
+        quit();
     }
 
     public void CreateAndCheckProject(){
+        Allure.step("Создадим проект и заполним форму");
         driver.switchTo().frame("mainframe");
         if (driver.findElements(By.cssSelector("a[href$='projectView.php'][class='list-group-item']")).size()==1) {
             logger.info("Открываем страницу создания проекта");
@@ -64,7 +69,7 @@ public class Lesson4_2 extends BaseTest
         String PrefActual = row.get(7).getText();
         //public
         int PublicElQty = driver.findElements(By.xpath("//a[@href and contains (text(),'"+TitleExpected+"')]//..//..//img[@title='Public']")).size();
-
+        Allure.step("Проверки заголовка, описания, количества");
         assertEquals(TitleExpected,TitleActual);
         assertEquals(DescrExpected,DescrActual);
         assertEquals(PrefExpected,PrefActual);

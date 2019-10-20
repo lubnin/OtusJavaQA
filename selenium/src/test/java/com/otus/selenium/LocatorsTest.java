@@ -1,4 +1,4 @@
-package OtusQA;
+package com.otus.selenium;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;

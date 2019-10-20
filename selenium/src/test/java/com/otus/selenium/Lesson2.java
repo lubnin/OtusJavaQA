@@ -1,4 +1,4 @@
-package OtusQA;
+package com.otus.selenium;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;

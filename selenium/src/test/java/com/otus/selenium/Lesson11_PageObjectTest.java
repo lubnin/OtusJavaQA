@@ -1,4 +1,4 @@
-package OtusQA;
+package com.otus.selenium;
 
 /*Реализуйте автоматический тест, используя Java + Selenium + POM
         Шаги теста:
@@ -21,8 +21,10 @@ package OtusQA;
         +1 балла - реализован паттерн PageObject*/
 
 
-import OtusQA.Lesson11_PageObjects.OtusMainPage;
-import OtusQA.Lesson11_PageObjects.OtusProfile;
+import com.otus.selenium.lesson11_pageobjects.OtusMainPage;
+import com.otus.selenium.lesson11_pageobjects.OtusProfile;
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -36,15 +38,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @RunWith(JUnitParamsRunner.class)
-public class Lesson11_PageObject {
-    static final Logger logger = LogManager.getLogger(Lesson11_PageObject.class);
+public class Lesson11_PageObjectTest {
+    static final Logger logger = LogManager.getLogger(Lesson11_PageObjectTest.class);
     static WebDriver driver = WebDriverFactory.createNewDriver(Browser.CHROME);
     static WebDriverWait wait = new WebDriverWait(driver,10);
 
     private Object parametersForLesson11() {
         return new Object[][]{{"LoginValue",   "PasswordValue"}};
     }
-
+    @DisplayName("Проверка заполнения профиля в Otus")
+    @Description("Реализуйте автоматический тест, используя Java + Selenium + POM")
     @Test
     @Parameters
     public void lesson11(final String login,final String pwd) {

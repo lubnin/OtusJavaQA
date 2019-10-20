@@ -12,7 +12,7 @@
         - Нажать на опцию "различающиеся характеристики"
         -- Проверить, что позиция "Операционная система" не отображается в списке характеристик*/
 
-package OtusQA;
+package com.otus.selenium;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,8 +28,8 @@ import java.util.NoSuchElementException;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class Lesson6 {
-    static final Logger logger = LogManager.getLogger(Lesson6.class);
+public class Lesson6Test {
+    static final Logger logger = LogManager.getLogger(Lesson6Test.class);
     static WebDriver driver = WebDriverFactory.createNewDriver(Browser.CHROME);
 
     @Test
@@ -54,13 +54,6 @@ public class Lesson6 {
                 .withMessage("Not found ¯\\_(ツ)_/¯")
                 .until(items -> getCountOfElementsOnPage() > 10);
 
-//        wait    .ignoring(NoSuchElementException.class)
-//                .until(dr -> dr.findElement(By.xpath("//div[@class='n-filter-applied-results__content preloadable i-bem preloadable_js_inited']"))
-//                        .getAttribute("style")
-//                        .equals("height: auto;"));
-//        driver
-//                .findElement(By.cssSelector("div[class='n-snippet-cell2 i-bem b-zone b-spy-visible n-snippet-cell2_type_product b-spy-visible_js_inited b-zone_js_inited n-snippet-cell2_js_inited']"))
-//                .click();
         logger.debug("Добавить первый в списке Huawei");
         int itemIndex = getIndexOfTheFirstCellContainsManufacturerName("HUAWEI");
         String itemName = getItemNameByIndex(itemIndex);

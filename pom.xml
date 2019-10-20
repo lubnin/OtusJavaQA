@@ -3,17 +3,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>otusqa</groupId>
-    <artifactId>lubnin-learning</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
-    <packaging>pom</packaging>
-
     <modules>
         <module>selenium</module>
         <module>bdd</module>
     </modules>
+
+    <groupId>com.otus</groupId>
+    <artifactId>lubnin-learning</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <webdrivermanager.version>3.6.2</webdrivermanager.version>
+        <aspectj.version>1.9.2</aspectj.version>
+        <encoding>UTF-8</encoding>
+        <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
+        <alluremaven.version>2.10.0</alluremaven.version>
+        <allure-junit4.version>2.13.0</allure-junit4.version>
+        <mavencompiler.version>3.8.1</mavencompiler.version>
+    </properties>
 
     <dependencies>
     <dependency>
@@ -45,7 +53,7 @@
     <dependency>
         <groupId>net.lightbody.bmp</groupId>
         <artifactId>browsermob-proxy</artifactId>
-        <version>2.0-beta-8</version>
+        <version>2.0.0</version>
         <scope>test</scope>
         <exclusions>
             <exclusion>
@@ -58,25 +66,67 @@
             </exclusion>
         </exclusions>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/pl.pragmatists/JUnitParams -->
     <dependency>
         <groupId>pl.pragmatists</groupId>
         <artifactId>JUnitParams</artifactId>
         <version>1.1.1</version>
         <scope>test</scope>
     </dependency>
+    <dependency>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-junit4</artifactId>
+        <version>${allure-junit4.version}</version>
+        <scope>test</scope>
+    </dependency>
 </dependencies>
 
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <source>8</source>-->
-<!--                    <target>8</target>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${alluremaven.version}</version>
+                <configuration>
+                    <reportVersion>2.6.0</reportVersion>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <argLine>-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"</argLine>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>io.qameta.allure.junit4.AllureJunit4</value>
+                        </property>
+                    </properties>
+                    <systemProperties>
+                        <property>
+                            <name>allure.results.directory</name>
+                            <value>${project.build.directory}/allure-results</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mavencompiler.version}</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

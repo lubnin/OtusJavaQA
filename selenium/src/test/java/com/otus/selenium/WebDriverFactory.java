@@ -1,4 +1,4 @@
-package OtusQA;
+package com.otus.selenium;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
@@ -94,6 +94,29 @@ public class WebDriverFactory {
         WebDriver dr = (WebDriver) browserClass.newInstance();
         return dr;
     }*/
+
+// реализация через рефлексию работает только без опций, поэтому фтопку
+//    private static WebDriver driverInitialize(String classFullName,MutableCapabilities options) {
+//        WebDriver dr = null;
+//        try{
+//            Class browserClass = Class.forName(classFullName);
+//            dr = (WebDriver) browserClass.newInstance();
+//        } catch (IllegalAccessException e) {
+//            //e.printStackTrace();
+//        } catch (InstantiationException e) {
+//            //e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            //e.printStackTrace();
+//        } finally {
+//            if (dr==null){
+//                logger.warn("Произошла ошибка инициализации браузера в factory-классе, аварийно запущен Chrome");
+//                WebDriverManager.chromedriver().setup();
+//                dr = new ChromeDriver();
+//            }
+//        }
+//        return dr;
+//    }
+
     public static void closeBrowser(WebDriver driver){
         Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
         String browserName = cap.getBrowserName().toUpperCase();
